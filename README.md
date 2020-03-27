@@ -1,4 +1,4 @@
-# Joomla HikaShop plugin for Paylike
+# Joomla HikaShop plugin for Paylike [![Build Status](https://travis-ci.org/paylike/plugin-hikashop.svg?branch=master)](https://travis-ci.org/paylike/plugin-hikashop)
 
 This plugin is *not* developed or maintained by Paylike but kindly made
 available by a user.
@@ -7,9 +7,10 @@ Released under the GPL V3 license: https://opensource.org/licenses/GPL-3.0
 
 ## Supported HikaShop versions
 
+ [![Last succesfull test](https://log.derikon.ro/api/v1/log/read?tag=hikashop&view=svg&label=Hikashop&key=ecommerce&background=34b5ca)](https://log.derikon.ro/api/v1/log/read?tag=hikashop&view=html)
+
 * The plugin has been tested with most versions of HikaShop at every iteration. We recommend using the latest version of HikaShop, but if that is not possible for some reason, test the plugin with your HikaShop version and it would probably function properly. 
-* Hikashop
- version last tested on: *4.2.1*
+ 
 
 ## Installation
 
