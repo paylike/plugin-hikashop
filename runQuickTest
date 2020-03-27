@@ -1,0 +1,2 @@
+#!/bin/bash
+./vendor/bin/steward run staging chrome --group="hikashop_quick_test" -vv

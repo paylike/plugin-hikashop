@@ -38,6 +38,7 @@ $locale = substr($lang->getTag(),0,2);
 	jQuery(document).ready(function(){
 		var paylike = Paylike('<?php echo $this->vars["public_key"];?>');
 		function pay(){
+			window.paylikeAmount = '<?php echo $this->vars["paylike_amount"];?>';
 			paylike.popup({
 				// locale: 'da',  // pin popup to a locale
 				title: '<?php echo $this->vars["sitename"];?>',
