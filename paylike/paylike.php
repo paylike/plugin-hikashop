@@ -10,6 +10,8 @@ defined('_JEXEC') or die('Restricted access');
 
 include_once( 'Paylike/Client.php' );
 include_once( 'Paylike/Currencies.php' );
+include_once( 'vendor/autoload.php' );
+include_once( 'helpers/Paylike_Keys_Validator.php' );
 
 class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 	var $name = 'paylike';
@@ -25,9 +27,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 	}
 
 	function onPaymentConfiguration(&$element) {
-
 		parent::onPaymentConfiguration($element);
-		
 	}
 
 	public function onAfterOrderConfirm(&$order, &$methods, $method_id) {
@@ -47,7 +47,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 		if(strpos($price,'.')){
 			$price =rtrim(rtrim($price, '0'), '.');
 		}
-		
+
 
 		$customs = array();
 		$products = hikashop_get('class.product');
@@ -82,7 +82,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 	}
 
 	public function getPaymentDefaultValues(&$element) {
-		
+
 		$element->payment_name = JText::_('HIKASHOP_PAY_LIKE_NAME');
 		$element->payment_description = JText::_('HIKASHOP_PAY_LIKE_DESCRIPTION');
 		$element->payment_images = 'VISA,Credit_card';
@@ -94,14 +94,43 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 	}
 
 	function onPaymentConfigurationSave(&$element) {
-		
+		/* Initialize validator object */
+		$validator = new PaylikeValidator();
+		$errors = array();
+		/* Read fields */
+		$app_key = $element->payment_params->private_key;
+		$public_key = $element->payment_params->public_key;
+		$mode = $element->payment_params->test_mode?"Test":"Live";
+
+		/* Validate module keys */
+		$error = $validator->validateAppKeyField($app_key, $mode);
+		if (strlen($error)) {
+			/* Clean app key*/
+			$element->payment_params->private_key = '';
+			$errors[] = $error;
+		}
+
+		$error = $validator->validatePublicKeyField($public_key, $mode);
+		if (strlen($error)) {
+			/* Clean public key*/
+			$element->payment_params->public_key = '';
+			$errors[] = $error;
+		}
+
+		if(sizeof($errors)){
+			$app = JFactory::getApplication();
+			foreach($errors as $error){
+					/* Display error message if exists */
+					$app->enqueueMessage($error,'error');
+			}
+			return false;
+		}
+
 		parent::onPaymentConfigurationSave($element);
-		
 		return true;
 	}
 
 	public function onPaymentNotification(&$statuses) {
-
 		$act = JRequest::getVar("act");
 
 		switch($act):
@@ -181,7 +210,6 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 		}
 
 		if($order->order_status != $this->payment_params->confirmed_status){
-				
 				// capture payment
 				if ( $_REQUEST['amount'] > 0 ) {
 					$data        = array(
@@ -198,11 +226,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin {
 					$db->execute();
 					endif;
 				}
-					
 			}
-
-		
-
 	}
 
 	public function orderHistoryURL() {

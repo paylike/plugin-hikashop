@@ -16,7 +16,11 @@
 		<filename>paylike_end.php</filename>
 		<filename>paylike.sql</filename>
 		<filename>uninstall.paylike.sql</filename>
+		<filename>composer.lock</filename>
+		<filename>composer.json</filename>
 		<folder>Paylike</folder>
+		<folder>vendor</folder>
+		<folder>helpers</folder>
 	</files>
 	<install>
 		<sql>
