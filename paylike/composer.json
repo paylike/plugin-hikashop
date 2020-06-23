@@ -1,0 +1,17 @@
+{
+  "name": "paylike/module-paylike",
+  "description": "Paylike integration with payment gateway Joomla | Hikashop",
+  "type": "hikashop-module",
+  "license": [
+      "GPL-3.0-or-later"
+  ],
+  "authors": [
+    {
+      "name": "Genuineq",
+      "email": "office@genuineq.com"
+    }
+  ],
+  "require": {
+    "paylike/php-api": "^1.0.3"
+  }
+}

@@ -10,22 +10,22 @@ defined('_JEXEC') or die('Restricted access');
 ?>
 <tr>
 	<td class="key">
-		<label for="data[payment][payment_params][public_key]"><?php
-			echo JText::_( 'HIKASHOP_PUBLIC_KEY' );
-		?></label>
-	</td>
-	<td>
-		<input type="text" name="data[payment][payment_params][public_key]" value="<?php echo $this->escape(@$this->element->payment_params->public_key); ?>" />
-	</td>
-</tr>
-<tr>
-	<td class="key">
 		<label for="data[payment][payment_params][private_key]"><?php
 			echo JText::_( 'HIKASHOP_PRIVATE_KEY' );
 		?></label>
 	</td>
 	<td>
 		<input type="text" name="data[payment][payment_params][private_key]" value="<?php echo $this->escape(@$this->element->payment_params->private_key); ?>" />
+	</td>
+</tr>
+<tr>
+	<td class="key">
+		<label for="data[payment][payment_params][public_key]"><?php
+			echo JText::_( 'HIKASHOP_PUBLIC_KEY' );
+		?></label>
+	</td>
+	<td>
+		<input type="text" name="data[payment][payment_params][public_key]" value="<?php echo $this->escape(@$this->element->payment_params->public_key); ?>" />
 	</td>
 </tr>
 <tr>
@@ -73,5 +73,3 @@ defined('_JEXEC') or die('Restricted access');
 		echo JHTML::_('hikaselect.booleanlist', "data[payment][payment_params][test_mode]" , '', $this->element->payment_params->test_mode);
 	?></td>
 </tr>
-
-
