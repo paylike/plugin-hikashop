@@ -1,8 +1,7 @@
 {
   "name": "paylike/module-paylike",
-  "description": "Paylike integration with payment gateway oscommerce",
-  "type": "oscommerce-module",
-  "version": "1.0.6",
+  "description": "Paylike integration with payment gateway Joomla | Hikashop",
+  "type": "hikashop-module",
   "license": [
       "GPL-3.0-or-later"
   ],
