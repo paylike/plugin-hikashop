@@ -2,8 +2,8 @@
 /**
  * @package	HikaShop for Joomla!
  * @version	4.2.2
- * @author	hikashop.com
- * @copyright	(C) 2010-2019 HIKARI SOFTWARE. All rights reserved.
+ * @author	paylike.io
+ * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
@@ -68,15 +68,15 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
         "public_key" => $method->payment_params->public_key,
         "order_id" => $order->order_id,
         "order_number" => $order->order_number,
-        "method_id"=>$method_id,
-        "custom"=>implode($customs, "\n"),
-        "sitename"=>$config->get("sitename"),
-        "customer_name"=>$order->cart->billing_address->address_firstname." ".$order->cart->billing_address->address_lastname,
-        "customer_email"=>$this->user->user_email,
-        "customer_phone"=>$order->cart->billing_address->address_telephone,
-        "customer_address"=>$order->cart->shipping_address->address_street." ".$order->cart->shipping_address->address_city." ".$order->cart->shipping_address->address_post_code." ".$order->cart->shipping_address->address_state->zone_name." ".$order->cart->shipping_address->address_state->zone_code_2,
-        "customer_ip"=>$ip,
-        "history_url"=>$this->orderHistoryURL(),
+        "method_id" => $method_id,
+        "custom" => implode("\n", $customs),
+        "sitename" => $config->get("sitename"),
+        "customer_name" => $order->cart->billing_address->address_firstname." ".$order->cart->billing_address->address_lastname,
+        "customer_email" => $this->user->user_email,
+        "customer_phone" => $order->cart->billing_address->address_telephone,
+        "customer_address" => $order->cart->shipping_address->address_street." ".$order->cart->shipping_address->address_city." ".$order->cart->shipping_address->address_post_code." ".$order->cart->shipping_address->address_state->zone_name." ".$order->cart->shipping_address->address_state->zone_code_2,
+        "customer_ip" => $ip,
+        "history_url" => $this->orderHistoryURL(),
         );
 
 
@@ -238,7 +238,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 
     public function orderHistoryURL()
     {
-        $db = & JFactory::getDBO();
+        $db = &JFactory::getDBO();
         $db->setQuery("select * from #__menu where link like '%com_hikashop&view=user&layout=cpanel%'");
         $row = $db->loadObject();
         if ($row->id) {
