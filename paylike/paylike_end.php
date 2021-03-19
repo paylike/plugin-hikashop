@@ -2,8 +2,8 @@
 /**
  * @package	HikaShop for Joomla!
  * @version	4.2.2
- * @author	hikashop.com
- * @copyright	(C) 2010-2019 HIKARI SOFTWARE. All rights reserved.
+ * @author	paylike.io
+ * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
@@ -32,7 +32,7 @@ $locale = substr($lang->getTag(),0,2);
 	</div>
 </div>
 
-<script src="https://sdk.paylike.io/3.js"></script>
+<script src="https://sdk.paylike.io/6.js"></script>
 <script type="text/javascript">
 
 	jQuery(document).ready(function(){

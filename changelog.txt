@@ -1,0 +1,37 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## 1.0.7 - 2021-03-19
+### Added
+- "changelog.txt" file for this plugin
+### Changed
+- external JavaScript file import from '3.js' to '6.js' in paylike\paylike_end.php file
+- paylike.zip - updated with modified files
+- paylikestatus.zip - updated with modified files
+- paylike.php (some code indent, minor implode function fix)
+- paylike.xml, paylikestatus.xml, paylike_configuration.php, paylike_end.php - details about author etc.
+
+## 1.0.6 - 2020-06-24
+### Changed
+- Bump Version - from 4.2.1 to 4.2.2.
+
+## 1.0.5 - 2020-06-23
+### Fixes
+- Code review #1
+
+## 1.0.4 - 2020-06-21
+### Added
+- logic to validate the public and private keys upon saving.
+
+## 1.0.3 - 2020-05-08
+### Updated
+- README.md - plugin install steps description detailed
+- .travis.yml - changed dist trusty to xenial
+
+## 1.0.2 - 2020-03-27
+### Added
+- Testing
+
+## 1.0.1 - 2019-08-30
+### Added
+- Initial commit
