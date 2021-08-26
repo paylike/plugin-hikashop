@@ -43,8 +43,8 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
         $method =& $methods[$method_id];
         $this->modifyOrder($order->order_id, $method->payment_params->order_status, false, false);
 
-        $lang = &JFactory::getLanguage();
-        $config = &JFactory::getConfig();
+        $lang = JFactory::getLanguage();
+        $config = JFactory::getConfig();
         $locale=strtoupper(substr($lang->get('tag'), 0, 2));
 
         $price = round($order->cart->full_total->prices[0]->price_value_with_tax, (int)$this->currency->currency_locale['int_frac_digits']);
@@ -238,7 +238,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 
     public function orderHistoryURL()
     {
-        $db = &JFactory::getDBO();
+        $db = JFactory::getDBO();
         $db->setQuery("select * from #__menu where link like '%com_hikashop&view=user&layout=cpanel%'");
         $row = $db->loadObject();
         if ($row->id) {

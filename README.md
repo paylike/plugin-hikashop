@@ -18,7 +18,7 @@ Released under the GPL V3 license: https://opensource.org/licenses/GPL-3.0
   1. Signup at [paylike.io](https://paylike.io) (it’s free)
   1. Create a live account
   1. Create an app key for your Joomla website
-  1. Upload the ```paylike.zip``` and ```paylike_status.zip``` trough the Joomla Admin
+  1. Upload the ```paylike.zip``` and ```paylikestatus.zip``` trough the Joomla Admin
   1. Activate both plugins through the 'Extensions' screen in Joomla.
   1. Under HikaShop payment methods create a new payment method and select Hikashop `Paylike Payment Plugin`.
   1. Insert the app key and your public key in the settings for the Paylike payment gateway you just created
