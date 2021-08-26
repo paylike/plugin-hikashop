@@ -1,6 +1,6 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
+ * @package	Paylike Payment Plugin for Hikashop
  * @version	4.2.2
  * @author	paylike.io
  * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.
@@ -15,6 +15,8 @@ include_once('helpers/Paylike_Keys_Validator.php');
 
 class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 {
+    const PAYLIKE_PLUGIN_VERSION = '1.1.0';
+
     public $name = 'paylike';
     public $multiple = true;
 
@@ -57,26 +59,29 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
         $products = hikashop_get('class.product');
         foreach ($order->cart->cart_products as $item):
             $product = $products->get($item->product_id);
-        $product->product_name = str_replace(array('"',"'"), array('\"',"\'"), $product->product_name);
-        $customs[]="{ product: '$product->product_name ($product->product_code)', quantity: $item->cart_product_quantity },";
+            $product->product_name = str_replace(array('"',"'"), array('\"',"\'"), $product->product_name);
+            $customs[]="{ product: '$product->product_name ($product->product_code)', quantity: $item->cart_product_quantity },";
         endforeach;
 
         $vars = array(
-        "currency" => $this->currency->currency_code,
-        "amount" => $price,
-        "paylike_amount" => get_paylike_amount($price, $this->currency->currency_code),
-        "public_key" => $method->payment_params->public_key,
-        "order_id" => $order->order_id,
-        "order_number" => $order->order_number,
-        "method_id" => $method_id,
-        "custom" => implode("\n", $customs),
-        "sitename" => $config->get("sitename"),
-        "customer_name" => $order->cart->billing_address->address_firstname." ".$order->cart->billing_address->address_lastname,
-        "customer_email" => $this->user->user_email,
-        "customer_phone" => $order->cart->billing_address->address_telephone,
-        "customer_address" => $order->cart->shipping_address->address_street." ".$order->cart->shipping_address->address_city." ".$order->cart->shipping_address->address_post_code." ".$order->cart->shipping_address->address_state->zone_name." ".$order->cart->shipping_address->address_state->zone_code_2,
-        "customer_ip" => $ip,
-        "history_url" => $this->orderHistoryURL(),
+            "test_mode" => $this->payment_params->test_mode,
+            "currency" => $this->currency->currency_code,
+            "exponent" => get_paylike_currency($this->currency->currency_code)['exponent'],
+            "amount" => $price,
+            "paylike_amount" => get_paylike_amount($price, $this->currency->currency_code),
+            "public_key" => $method->payment_params->public_key,
+            "order_id" => $order->order_id,
+            "order_number" => $order->order_number,
+            "method_id" => $method_id,
+            "custom" => implode("\n", $customs),
+            "sitename" => $config->get("sitename"),
+            "customer_name" => $order->cart->billing_address->address_firstname." ".$order->cart->billing_address->address_lastname,
+            "customer_email" => $this->user->user_email,
+            "customer_phone" => $order->cart->billing_address->address_telephone,
+            "customer_address" => $order->cart->shipping_address->address_street." ".$order->cart->shipping_address->address_city." ".$order->cart->shipping_address->address_post_code." ".$order->cart->shipping_address->address_state->zone_name." ".$order->cart->shipping_address->address_state->zone_code_2,
+            "customer_ip" => $ip,
+            "history_url" => $this->orderHistoryURL(),
+            "paylike_plugin_version" => self::PAYLIKE_PLUGIN_VERSION,
         );
 
 

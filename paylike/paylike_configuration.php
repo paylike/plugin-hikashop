@@ -1,6 +1,6 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
+ * @package	Paylike Payment Plugin for Hikashop
  * @version	4.2.2
  * @author	paylike.io
  * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.

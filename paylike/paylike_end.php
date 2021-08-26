@@ -1,6 +1,6 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
+ * @package	Paylike Payment Plugin for Hikashop
  * @version	4.2.2
  * @author	paylike.io
  * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.
@@ -10,7 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 $v = new JVersion();
 $version = $v->getShortVersion();
 
-$v2 =& hikashop_config();
+$v2 = &hikashop_config();
 $hikashop_version=$v2->get('version');
 
 $lang = JFactory::getLanguage();
@@ -23,7 +23,7 @@ $locale = substr($lang->getTag(),0,2);
 		<p><?php echo Jtext::_('HIKASHOP_ORDER_CREATED_INFO');?></p>
 		<p><a class="btn btn-default" id="PayNow"><?php echo Jtext::_('HIKASHOP_ORDER_CREATED_BUTTON');?></a></p>
 		<div id="token">
-		<?php echo JHtml::_('form.token'); ?> 
+		<?php echo JHtml::_('form.token'); ?>
 		</div>
 	</div>
 	<div class="paylike" id="paylike_paid" style="display: none;">
@@ -32,19 +32,23 @@ $locale = substr($lang->getTag(),0,2);
 	</div>
 </div>
 
-<script src="https://sdk.paylike.io/6.js"></script>
+<script src="https://sdk.paylike.io/10.js"></script>
 <script type="text/javascript">
 
 	jQuery(document).ready(function(){
-		var paylike = Paylike('<?php echo $this->vars["public_key"];?>');
+		var paylike = Paylike({key: '<?php echo $this->vars["public_key"];?>'});
 		function pay(){
 			window.paylikeAmount = '<?php echo $this->vars["paylike_amount"];?>';
-			paylike.popup({
+			paylike.pay({
 				// locale: 'da',  // pin popup to a locale
 				title: '<?php echo $this->vars["sitename"];?>',
-				currency: '<?php echo $this->vars["currency"];?>',
-				amount: (<?php echo $this->vars["paylike_amount"];?>),
-				locale: '<?php echo $locale;?>',	
+				test: (1 == <?php echo $this->vars["test_mode"];?>) ? (true) : (false),
+				amount: {
+					currency: '<?php echo $this->vars["currency"];?>',
+					exponent: (<?php echo $this->vars["exponent"];?>),
+					value: (<?php echo $this->vars["paylike_amount"];?>)
+				},
+				locale: '<?php echo $locale;?>',
 				// saved on transaction for retrieval from dashboard or API
 				custom: {
 					email: '<?php echo $this->vars["customer_email"];?>',
@@ -53,7 +57,6 @@ $locale = substr($lang->getTag(),0,2);
 					products: [
 						// nested objects will do
 						<?php echo $this->vars["custom"];?>
-
 						],
 					customer: {
                             name: '<?php echo $this->vars["customer_name"];?>',
@@ -69,16 +72,19 @@ $locale = substr($lang->getTag(),0,2);
 					ecommerce: {
 							name: 'Hikashop',
 							version: '<?php echo $hikashop_version;?>'
-							},	
+							},
+					paylikePluginVersion: {
+							version: '<?php echo $this->vars["paylike_plugin_version"];?>'
+							},
 					}
-				
+
 			}, function( err, res ){
 				if (err)
 					return console.log(err);
 
 				//console.log(res);
 				savingTransaction(res.transaction.id);
-		
+
 			});
 		}
 
@@ -111,5 +117,5 @@ $locale = substr($lang->getTag(),0,2);
 
 
 	});
-		
+
 </script>

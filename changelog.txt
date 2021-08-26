@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+
+## 1.1.0 - 2021-08-26
+### Changed
+- js SDK version to '10.js' in paylike\paylike_end.php file
+- modified logic to work with v10 js SDK
+- indent some code
+- removed version from paylike\Paylike folder files
+- updated Readme.md
+
 ## 1.0.7 - 2021-03-19
 ### Added
 - "changelog.txt" file for this plugin
