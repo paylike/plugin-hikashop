@@ -1,9 +1,8 @@
 <?php
 /**
  * @package	Paylike Payment Plugin for Hikashop
- * @version	4.2.2
  * @author	paylike.io
- * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.
+ * @copyright	(C) 2019-2022 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
@@ -13,9 +12,19 @@ include_once('Paylike/Currencies.php');
 include_once('vendor/autoload.php');
 include_once('helpers/Paylike_Keys_Validator.php');
 
+/**
+ * Use of "JFactory" is deprecated & will be removed in 5.0
+ * Joomla\CMS\Factory can be used
+ * @see https://joomla.stackexchange.com/questions/24484/jfactorygetdbo-deprecated-whats-the-replacement
+ */
+
+
+/**
+ * plgHikashoppaymentPaylike class
+ */
 class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 {
-    const PAYLIKE_PLUGIN_VERSION = '1.1.0';
+    const PAYLIKE_PLUGIN_VERSION = '1.2.0';
 
     public $name = 'paylike';
     public $multiple = true;
@@ -142,7 +151,11 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 
     public function onPaymentNotification(&$statuses)
     {
-        $act = JRequest::getVar("act");
+        /** @var \Joomla\CMS\Application\CMSApplication $app */
+        $app = JFactory::getApplication();
+        $input = $app->input;
+        /** Get act(ion) input value. */
+        $act = $input->get("act");
 
         switch ($act):
             case "savingTransaction":

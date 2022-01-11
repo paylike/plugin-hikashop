@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## 1.2.0 - 2022-01-11
+### Changed/Added
+- Compatibility with Joomla 4 - removed JRequest class used in 'paylike/paylike.php' file & modified logic
+
 ## 1.1.0 - 2021-08-26
 ### Changed
 - js SDK version to '10.js' in paylike\paylike_end.php file
