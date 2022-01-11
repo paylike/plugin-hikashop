@@ -6,7 +6,7 @@
 	<author>Paylike</author>
 	<authorEmail>hello@paylike.io</authorEmail>
 	<authorUrl>https://paylike.io</authorUrl>
-	<copyright>(C) 2019-2021 PAYLIKE. All rights reserved.</copyright>
+	<copyright>(C) 2019-2022 PAYLIKE. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<description>This plugin enables you to make massactions on orders</description>
 	<files>

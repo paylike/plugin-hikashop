@@ -1,9 +1,8 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
- * @version	4.2.2
- * @author	hikashop.com
- * @copyright	(C) 2010-2019 HIKARI SOFTWARE. All rights reserved.
+ * @package	Paylike Status Plugin for Hikashop
+ * @author	paylike.io
+ * @copyright (C) 2010-2022 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
@@ -86,11 +85,11 @@ class plgHikashopPaylikeStatus extends JPlugin
 
 		$sql ="select * from #__hikashop_payment_plg_paylike where order_id='$order->order_id' limit 1";
 		$db->setQuery($sql);
-		$row = $db->loadObject(); 
+		$row = $db->loadObject();
 
 		$txtid = $row->txnid;
 
-		$params = $this->getPayLikeConfig(); 
+		$params = $this->getPayLikeConfig();
 
 
 		\Paylike\Client::setKey( $params->private_key );
@@ -117,7 +116,7 @@ class plgHikashopPaylikeStatus extends JPlugin
 			endif;
 		}
 
-		
+
 	}
 
 	function getPayLikeConfig() {

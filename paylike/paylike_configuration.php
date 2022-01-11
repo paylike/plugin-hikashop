@@ -1,9 +1,8 @@
 <?php
 /**
  * @package	Paylike Payment Plugin for Hikashop
- * @version	4.2.2
  * @author	paylike.io
- * @copyright	(C) 2019-2021 PAYLIKE. All rights reserved.
+ * @copyright	(C) 2019-2022 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
