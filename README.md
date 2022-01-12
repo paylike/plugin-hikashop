@@ -9,6 +9,8 @@ Released under the GPL V3 license: https://opensource.org/licenses/GPL-3.0
 
  [![Last succesfull test](https://log.derikon.ro/api/v1/log/read?tag=hikashop&view=svg&label=Hikashop&key=ecommerce&background=34b5ca)](https://log.derikon.ro/api/v1/log/read?tag=hikashop&view=html)
 
+Hikashop version last tested on: 4.4.5 (& Joomla 4.0.5)
+
 * The plugin has been tested with most versions of HikaShop at every iteration. We recommend using the latest version of HikaShop, but if that is not possible for some reason, test the plugin with your HikaShop version and it would probably function properly.
 
 
