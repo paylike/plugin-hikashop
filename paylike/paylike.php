@@ -1,9 +1,8 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
- * @version	4.2.2
- * @author	hikashop.com
- * @copyright	(C) 2010-2019 HIKARI SOFTWARE. All rights reserved.
+ * @package	Paylike Payment Plugin for Hikashop
+ * @author	paylike.io
+ * @copyright	(C) 2019-2022 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
@@ -13,8 +12,20 @@ include_once('Paylike/Currencies.php');
 include_once('vendor/autoload.php');
 include_once('helpers/Paylike_Keys_Validator.php');
 
+/**
+ * Use of "JFactory" is deprecated & will be removed in 5.0
+ * Joomla\CMS\Factory can be used
+ * @see https://joomla.stackexchange.com/questions/24484/jfactorygetdbo-deprecated-whats-the-replacement
+ */
+
+
+/**
+ * plgHikashoppaymentPaylike class
+ */
 class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 {
+    const PAYLIKE_PLUGIN_VERSION = '1.2.0';
+
     public $name = 'paylike';
     public $multiple = true;
 
@@ -43,8 +54,8 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
         $method =& $methods[$method_id];
         $this->modifyOrder($order->order_id, $method->payment_params->order_status, false, false);
 
-        $lang = &JFactory::getLanguage();
-        $config = &JFactory::getConfig();
+        $lang = JFactory::getLanguage();
+        $config = JFactory::getConfig();
         $locale=strtoupper(substr($lang->get('tag'), 0, 2));
 
         $price = round($order->cart->full_total->prices[0]->price_value_with_tax, (int)$this->currency->currency_locale['int_frac_digits']);
@@ -57,26 +68,29 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
         $products = hikashop_get('class.product');
         foreach ($order->cart->cart_products as $item):
             $product = $products->get($item->product_id);
-        $product->product_name = str_replace(array('"',"'"), array('\"',"\'"), $product->product_name);
-        $customs[]="{ product: '$product->product_name ($product->product_code)', quantity: $item->cart_product_quantity },";
+            $product->product_name = str_replace(array('"',"'"), array('\"',"\'"), $product->product_name);
+            $customs[]="{ product: '$product->product_name ($product->product_code)', quantity: $item->cart_product_quantity },";
         endforeach;
 
         $vars = array(
-        "currency" => $this->currency->currency_code,
-        "amount" => $price,
-        "paylike_amount" => get_paylike_amount($price, $this->currency->currency_code),
-        "public_key" => $method->payment_params->public_key,
-        "order_id" => $order->order_id,
-        "order_number" => $order->order_number,
-        "method_id"=>$method_id,
-        "custom"=>implode($customs, "\n"),
-        "sitename"=>$config->get("sitename"),
-        "customer_name"=>$order->cart->billing_address->address_firstname." ".$order->cart->billing_address->address_lastname,
-        "customer_email"=>$this->user->user_email,
-        "customer_phone"=>$order->cart->billing_address->address_telephone,
-        "customer_address"=>$order->cart->shipping_address->address_street." ".$order->cart->shipping_address->address_city." ".$order->cart->shipping_address->address_post_code." ".$order->cart->shipping_address->address_state->zone_name." ".$order->cart->shipping_address->address_state->zone_code_2,
-        "customer_ip"=>$ip,
-        "history_url"=>$this->orderHistoryURL(),
+            "test_mode" => $this->payment_params->test_mode,
+            "currency" => $this->currency->currency_code,
+            "exponent" => get_paylike_currency($this->currency->currency_code)['exponent'],
+            "amount" => $price,
+            "paylike_amount" => get_paylike_amount($price, $this->currency->currency_code),
+            "public_key" => $method->payment_params->public_key,
+            "order_id" => $order->order_id,
+            "order_number" => $order->order_number,
+            "method_id" => $method_id,
+            "custom" => implode("\n", $customs),
+            "sitename" => $config->get("sitename"),
+            "customer_name" => $order->cart->billing_address->address_firstname." ".$order->cart->billing_address->address_lastname,
+            "customer_email" => $this->user->user_email,
+            "customer_phone" => $order->cart->billing_address->address_telephone,
+            "customer_address" => $order->cart->shipping_address->address_street." ".$order->cart->shipping_address->address_city." ".$order->cart->shipping_address->address_post_code." ".$order->cart->shipping_address->address_state->zone_name." ".$order->cart->shipping_address->address_state->zone_code_2,
+            "customer_ip" => $ip,
+            "history_url" => $this->orderHistoryURL(),
+            "paylike_plugin_version" => self::PAYLIKE_PLUGIN_VERSION,
         );
 
 
@@ -137,7 +151,11 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 
     public function onPaymentNotification(&$statuses)
     {
-        $act = JRequest::getVar("act");
+        /** @var \Joomla\CMS\Application\CMSApplication $app */
+        $app = JFactory::getApplication();
+        $input = $app->input;
+        /** Get act(ion) input value. */
+        $act = $input->get("act");
 
         switch ($act):
             case "savingTransaction":
@@ -238,7 +256,7 @@ class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 
     public function orderHistoryURL()
     {
-        $db = & JFactory::getDBO();
+        $db = JFactory::getDBO();
         $db->setQuery("select * from #__menu where link like '%com_hikashop&view=user&layout=cpanel%'");
         $row = $db->loadObject();
         if ($row->id) {

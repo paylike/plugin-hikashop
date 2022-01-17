@@ -1,9 +1,8 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
- * @version	4.2.2
- * @author	hikashop.com
- * @copyright	(C) 2010-2019 HIKARI SOFTWARE. All rights reserved.
+ * @package	Paylike Payment Plugin for Hikashop
+ * @author	paylike.io
+ * @copyright	(C) 2019-2022 PAYLIKE. All rights reserved.
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');
