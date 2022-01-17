@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="2.5" method="upgrade" group="hikashoppayment">
 	<name>Hikashop Paylike Payment Plugin</name>
-	<creationDate>30 August 2019</creationDate>
+	<creationDate>11 January 2022</creationDate>
 	<version>1.2.0</version>
 	<author>Paylike</author>
 	<authorEmail>hello@paylike.io</authorEmail>
