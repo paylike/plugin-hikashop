@@ -5,5 +5,5 @@
 vendor
 !/*/vendor
 logs
-node-modules
+node_modules
 cypress.env.json
