@@ -138,11 +138,12 @@ describe('paylike plugin quick test', () => {
         cy.wait(1000);
 
         /** Disable email notifications. */
-        cy.get('#config_value-order_notification.published').click();
-        cy.get('#config_value-order_admin_notification.published').click();
-        cy.get('.hk_center #config_value-order_admin_notification.published .icon-unpublish');
+        // cy.get('#config_value-order_notification.published').click();
+        // cy.get('#config_value-order_admin_notification.published').click();
+        // cy.get('.hk_center #config_value-order_admin_notification.published .icon-unpublish');
 
 
     });
+
 
 }); // describe
