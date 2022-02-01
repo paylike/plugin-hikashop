@@ -172,55 +172,55 @@ describe('paylike plugin quick test', () => {
     /**
      * Make an instant payment
      */
-    // it('makes an instant payment with Paylike', () => {
-    //     /** Go to store frontend. */
-    //     cy.goToPage(StoreUrl);
+    it('makes an instant payment with Paylike', () => {
+        /** Go to store frontend. */
+        cy.goToPage(StoreUrl);
 
-    //     /** Client frontend login. */
-    //     cy.get('input[name=username]').type(`${StoreUsername}`);
-    //     cy.get('input[name=password]').type(`${StorePassword}{enter}`);
+        /** Client frontend login. */
+        cy.get('input[name=username]').type(`${StoreUsername}`);
+        cy.get('input[name=password]').type(`${StorePassword}{enter}`);
 
-    //     /** Change currency & wait for products price to finish update. */
-    //     cy.get('#hikashopcurrency option').each(($option) => {
-    //         if ($option.text().includes(CurrencyToChangeWith)) {
-    //             cy.get('#hikashopcurrency').select($option.val());
-    //         }
-    //     });
-    //     cy.wait(2000);
+        /** Change currency & wait for products price to finish update. */
+        cy.get('#hikashopcurrency option').each(($option) => {
+            if ($option.text().includes(CurrencyToChangeWith)) {
+                cy.get('#hikashopcurrency').select($option.val());
+            }
+        });
+        cy.wait(2000);
 
-    //     /** Add to cart random product. */
-    //     var randomInt = PaylikeTestHelper.getRandomInt(/*max*/ 6);
-    //     cy.get('.hikabtn.hikacart').eq(randomInt).click();
+        /** Add to cart random product. */
+        var randomInt = PaylikeTestHelper.getRandomInt(/*max*/ 6);
+        cy.get('.hikabtn.hikacart').eq(randomInt).click();
 
-    //     /** Wait for 'added to cart' notification to disappear */
-    //     cy.wait(3000);
-    //     cy.get('.notifyjs-metro-base.notifyjs-metro-info').should('not.exist');
+        /** Wait for 'added to cart' notification to disappear */
+        cy.wait(3000);
+        cy.get('.notifyjs-metro-base.notifyjs-metro-info').should('not.exist');
 
-    //     /** Proceed to checkout. */
-    //     cy.get('.hikashop_cart_proceed_to_checkout').click();
+        /** Proceed to checkout. */
+        cy.get('.hikashop_cart_proceed_to_checkout').click();
 
-    // //// TODO calculate amount
-    // //// TODO calculate amount
-    // //// TODO calculate amount
+    //// TODO calculate amount
+    //// TODO calculate amount
+    //// TODO calculate amount
 
-    //     /** Choose Paylike. */
-    //     cy.get(`input[id*=${PaylikeName}]`).click();
+        /** Choose Paylike. */
+        cy.get(`input[id*=${PaylikeName}]`).click();
 
-    //     /** Go to checkout next step. */
-    //     cy.get('#hikabtn_checkout_next').click();
+        /** Go to checkout next step. */
+        cy.get('#hikabtn_checkout_next').click();
 
-    //     /** Check if order was placed. */
-    //     cy.get('#paylike_paying').should('be.visible');
+        /** Check if order was placed. */
+        cy.get('#paylike_paying').should('be.visible');
 
-    //     /**
-    //      * Fill in Paylike popup.
-    //      */
-    //     PaylikeTestHelper.fillAndSubmitPaylikePopup();
+        /**
+         * Fill in Paylike popup.
+         */
+        PaylikeTestHelper.fillAndSubmitPaylikePopup();
 
-    //     /** Check if order was paid. */
-    //     cy.get('.hikashop_paylike_end #paylike_paid').should('be.visible');
+        /** Check if order was paid. */
+        cy.get('.hikashop_paylike_end #paylike_paid').should('be.visible');
 
-    // });
+    });
 
 
     // it('process an order from admin panel', () => {
