@@ -62,7 +62,7 @@ describe('paylike plugin quick test', () => {
     /**
      * Make an instant payment
      */
-    it('makes an instant payment with Paylike', () => {
+    it('makes a payment with Paylike', () => {
         TestMethods.makePaymentFromFrontend(Cypress.env('ENV_CURRENCY_TO_CHANGE_WITH'));
     });
 
