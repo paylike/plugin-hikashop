@@ -276,7 +276,6 @@ describe('paylike plugin quick test', () => {
             PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
             PaylikeTestHelper.changeOrderStatus('shipped');
         } else {
-            // refund
             PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
             PaylikeTestHelper.changeOrderStatus('refunded');
         }
