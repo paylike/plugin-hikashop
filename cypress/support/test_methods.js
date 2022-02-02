@@ -31,7 +31,6 @@ export var TestMethods = {
     ManagePaylikeSettingUrl: '/index.php?option=com_hikashop&ctrl=plugins&plugin_type=payment',
     OrdersPageAdminUrl: '/index.php?option=com_hikashop&ctrl=order&order_type=sale',
 
-
     /**
      * Get Hikashop & Paylike versions and send log data.
      */
@@ -212,9 +211,7 @@ export var TestMethods = {
 
         /** Check if order was paid. */
         cy.get('.hikashop_paylike_end #paylike_paid').should('be.visible');
-
     },
-
 
     /**
      * Process last order from admin panel
@@ -246,5 +243,29 @@ export var TestMethods = {
             PaylikeTestHelper.changeOrderStatus('refunded');
         }
     },
+    /**
+     * Change settings, make payment and process order
+     */
+    modifyCaptureModeAndPayWithSelectedCurrency(currency) {
 
+        /** Make an instant payment. */
+        it(`makes a Paylike payment with "${currency}"`, () => {
+            this.makePaymentFromFrontend(currency);
+        });
+
+        /** Process last order from admin panel. */
+        it('process (capture/refund/void) an order from admin panel', () => {
+            this.processOrderFromAdmin();
+        });
+
+        /** Send log if currency = DKK. */
+        /**
+         * HARDCODED currency
+         */
+        if ('DKK' == currency) {
+            it('log hikashop & paylike versions remotely', () => {
+                this.logHikashopPaylikeVersions();
+            });
+        }
+    }
 }
