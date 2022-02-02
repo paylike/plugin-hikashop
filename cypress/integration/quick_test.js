@@ -3,14 +3,13 @@
 'use strict';
 
 import { PaylikeTestHelper } from './hikashop_helper.js';
+import { PaylikeCurrencies } from '../support/currencies.js';
 
 describe('paylike plugin quick test', () => {
 
     /** Admin & frontend user credentials. */
     const StoreUrl = Cypress.env('ENV_STORE_URL');
     const AdminUrl = Cypress.env('ENV_ADMIN_URL');
-    const AdminUsername = Cypress.env('ENV_ADMIN_USER');
-    const AdminPassword = Cypress.env('ENV_ADMIN_PASS');
     const StoreUsername = Cypress.env('ENV_CLIENT_USER');
     const StorePassword = Cypress.env('ENV_CLIENT_PASS');
 
@@ -57,9 +56,7 @@ describe('paylike plugin quick test', () => {
      */
     if (NeedToAdminLogin) {
         it('login into admin backend', () => {
-            /** Select username & password inputs, then press enter. */
-            cy.get('input[name=username]').type(`${AdminUsername}`);
-            cy.get('input[name=passwd]').type(`${AdminPassword}{enter}`);
+            PaylikeTestHelper.loginIntoAdmin();
         });
     }
 
@@ -199,12 +196,36 @@ describe('paylike plugin quick test', () => {
         /** Proceed to checkout. */
         cy.get('.hikashop_cart_proceed_to_checkout').click();
 
-    //// TODO calculate amount
-    //// TODO calculate amount
-    //// TODO calculate amount
-
         /** Choose Paylike. */
         cy.get(`input[id*=${PaylikeName}]`).click();
+
+        /**
+         * Extract order amount
+         */
+        cy.get('.hikashop_checkout_cart_final_total').then(($frontendTotalAmount) => {
+            /** Get multiplier based on currency code. */
+            var multiplier = PaylikeCurrencies.get_paylike_currency_multiplier(CurrencyToChangeWith);
+
+            /** Replace any character except numbers, commas, points */
+            var filtered = ($frontendTotalAmount.text()).replace(/[^0-9,.]/g, '')
+            // var match = filtered.match(/^-?(\d{1,3}(?<tt>\.|\,| ))((\d{3}\k<tt>)*(\d{3}(?!\k<tt>)[\.|\,]))?\d*$/g);
+            var matchPointFirst = filtered.match(/\..*,/g);
+            var matchCommaFirst = filtered.match(/,.*\./g);
+
+            if (matchPointFirst) {
+                var amountAsText = (filtered.replace('.', '')).replace(',', '.');
+            } else if (matchCommaFirst) {
+                var amountAsText = filtered.replace(',', '');
+            } else {
+                // var amountAsText = (filtered.replace(',', '')).replace('.', '');
+                var amountAsText = filtered.replace(',', '.');
+            }
+            var formattedAmount = parseFloat(amountAsText);
+            var expectedAmount = formattedAmount * multiplier;
+
+            /** Save expected amount as global. */
+            cy.wrap(expectedAmount).as('expectedAmount');
+        });
 
         /** Go to checkout next step. */
         cy.get('#hikabtn_checkout_next').click();
@@ -217,28 +238,50 @@ describe('paylike plugin quick test', () => {
          */
         PaylikeTestHelper.fillAndSubmitPaylikePopup();
 
+        /** Verify amount. */
+        /** We verify here, because "window.paylikeAmount" is available after paylike popup show */
+        cy.get('@expectedAmount').then(expectedAmount => {
+            cy.window().then((win) => {
+                expect(expectedAmount).to.eq(Number(win.paylikeAmount))
+            })
+        });
+
         /** Check if order was paid. */
         cy.get('.hikashop_paylike_end #paylike_paid').should('be.visible');
 
     });
 
 
-    // it('process an order from admin panel', () => {
-    //     /** Go to admin orders page. */
-    //     cy.gotoPage(OrdersPageAdminUrl);
+    /**
+     * Process last order from admin panel
+     */
+    it('process (capture/refund/void) an order from admin panel', () => {
 
-    //     cy.get('.hikashop_order_number_value a').click();
+        /** Login & go to admin orders page. */
+        if (false === NeedToAdminLogin) {
+            cy.goToPage(OrdersPageAdminUrl);
+            PaylikeTestHelper.loginIntoAdmin();
+        } else {
+            cy.goToPage(OrdersPageAdminUrl);
+        }
 
-    //     // cy.get('.hikashop_order_ordernumber').click();
-    //     if ('Delayed' == CaptureMode) {
+        PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
 
-    //         //capture
-    //         PaylikeTestHelper.changeOrderStatus('confirmed');
+        /** Click on first order from table (last created). */
+        cy.get('.hikashop_order_number_value a').first().click();
 
-    //     } else {
-    //         // refund
-    //         PaylikeTestHelper.changeOrderStatus('refunded');
-    //     }
-    // });
+        /**
+         * If CaptureMode='Delayed' => make 'capture' (set shipped on order status)
+         * If CaptureMode='Instant' => make 'refund' (set refunded on order status)
+         */
+        if ('Delayed' === CaptureMode) {
+            PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+            PaylikeTestHelper.changeOrderStatus('shipped');
+        } else {
+            // refund
+            PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+            PaylikeTestHelper.changeOrderStatus('refunded');
+        }
+    });
 
 }); // describe
