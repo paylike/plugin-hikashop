@@ -118,6 +118,7 @@ export var TestMethods = {
         PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
 
         /** Select search input and type "paylike", then press enter. */
+        cy.wait(1000);
         cy.get('input[name=search]').type(`${this.PaylikeName}{enter}`);
 
         /** Select link to Paylike settings. */
