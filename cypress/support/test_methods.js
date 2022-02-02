@@ -216,10 +216,10 @@ export var TestMethods = {
     /**
      * Process last order from admin panel
      */
-    processOrderFromAdmin() {
+    processOrderFromAdmin(contextFlag = false) {
 
         /** Login & go to admin orders page. */
-        if (false === this.NeedToAdminLogin) {
+        if (false === this.NeedToAdminLogin && !contextFlag) {
             cy.goToPage(this.OrdersPageAdminUrl);
             PaylikeTestHelper.loginIntoAdmin();
         } else {
@@ -244,9 +244,9 @@ export var TestMethods = {
         }
     },
     /**
-     * Change settings, make payment and process order
+     * Make payment with specified currency and process order
      */
-    modifyCaptureModeAndPayWithSelectedCurrency(currency) {
+    payWithSelectedCurrency(currency, contextFlag = false) {
 
         /** Make an instant payment. */
         it(`makes a Paylike payment with "${currency}"`, () => {
@@ -255,7 +255,7 @@ export var TestMethods = {
 
         /** Process last order from admin panel. */
         it('process (capture/refund/void) an order from admin panel', () => {
-            this.processOrderFromAdmin();
+            this.processOrderFromAdmin(contextFlag);
         });
 
         /** Send log if currency = DKK. */
