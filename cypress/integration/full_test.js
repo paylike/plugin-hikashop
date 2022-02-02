@@ -30,7 +30,8 @@ describe('paylike plugin quick test', () => {
 
     let captureModes = ['Instant', 'Delayed'];
     let currenciesToTest = Cypress.env('ENV_CURRENCIES_TO_TEST');
-
+    let contextFlag = true;
+    
     context(`make payments in "${captureModes[0]}" mode`, () => {
         /** Modify Paylike settings. */
         it(`change Paylike capture mode to "${captureModes[0]}"`, () => {
@@ -39,8 +40,8 @@ describe('paylike plugin quick test', () => {
         });
 
         /** Make Instant payments */
-        for (let currency of currenciesToTest) {
-            TestMethods.modifyCaptureModeAndPayWithSelectedCurrency(currency);
+        for (var currency of currenciesToTest) {
+            TestMethods.payWithSelectedCurrency(currency, contextFlag);
         }
     });
 
@@ -51,12 +52,12 @@ describe('paylike plugin quick test', () => {
             TestMethods.changePaylikeCaptureMode();
         });
 
-        for (let currency of currenciesToTest) {
+        for (var currency of currenciesToTest) {
             /**
              * HARDCODED currency
              */
             if ('USD' == currency || 'RON' == currency) {
-                TestMethods.modifyCaptureModeAndPayWithSelectedCurrency(currency);
+                TestMethods.payWithSelectedCurrency(currency, contextFlag);
             }
         }
     });
