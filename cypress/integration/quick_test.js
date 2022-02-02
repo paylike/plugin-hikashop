@@ -208,7 +208,6 @@ describe('paylike plugin quick test', () => {
 
             /** Replace any character except numbers, commas, points */
             var filtered = ($frontendTotalAmount.text()).replace(/[^0-9,.]/g, '')
-            // var match = filtered.match(/^-?(\d{1,3}(?<tt>\.|\,| ))((\d{3}\k<tt>)*(\d{3}(?!\k<tt>)[\.|\,]))?\d*$/g);
             var matchPointFirst = filtered.match(/\..*,/g);
             var matchCommaFirst = filtered.match(/,.*\./g);
 
@@ -217,7 +216,6 @@ describe('paylike plugin quick test', () => {
             } else if (matchCommaFirst) {
                 var amountAsText = filtered.replace(',', '');
             } else {
-                // var amountAsText = (filtered.replace(',', '')).replace('.', '');
                 var amountAsText = filtered.replace(',', '.');
             }
             var formattedAmount = parseFloat(amountAsText);
