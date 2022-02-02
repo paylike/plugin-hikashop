@@ -5,7 +5,7 @@ export let PaylikeTestHelper = {
      *
      * @param {String} selector
      */
-    setPositionRelativeOn: (selector) => {
+    setPositionRelativeOn(selector) {
         cy.get(selector).then(($selectedElement) => {
             $selectedElement.attr('style', 'position:relative;');
         });
@@ -21,7 +21,7 @@ export let PaylikeTestHelper = {
     /**
      * Fill Paylike popup and submit the form
      */
-    fillAndSubmitPaylikePopup: () => {
+    fillAndSubmitPaylikePopup() {
         cy.get('#card-number').type(`${Cypress.env('ENV_CARD_NUMBER')}`);
         cy.get('#card-expiry').type(`${Cypress.env('ENV_CARD_EXPIRY')}`);
         cy.get('#card-code').type(`${Cypress.env('ENV_CARD_CVV')}{enter}`);
@@ -29,9 +29,17 @@ export let PaylikeTestHelper = {
     /**
      * Change order status
      */
-    changeOrderStatus: (status) => {
+    changeOrderStatus(status) {
         cy.get('.hkc-md-6 #hikashop_order_field_general a .fa-pen').click();
         cy.get('.hikashop_order_status select').select(status);
         cy.get('.hkc-md-6 #hikashop_order_field_general .fa-save').click();
-    }
+    },
+    /**
+     * Login into admin
+     */
+    loginIntoAdmin() {
+        /** Select username & password inputs, then press enter. */
+        cy.get('input[name=username]').type(`${Cypress.env('ENV_ADMIN_USER')}`);
+        cy.get('input[name=passwd]').type(`${Cypress.env('ENV_ADMIN_PASS')}{enter}`);
+    },
 };
