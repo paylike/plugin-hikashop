@@ -22,6 +22,12 @@
  * Enhanced with auth for HTTP protected websites
  */
  Cypress.Commands.add('goToPage', (pageUrl) => {
+     /** Check if pageUrl is an URI for admin, then add admin url to it. */
+    if (pageUrl.match(/(\/index\.php\?)/g)) {
+        pageUrl = Cypress.env('ENV_ADMIN_URL') + pageUrl;
+        console.log(pageUrl)
+    }
+
     if (Cypress.env('ENV_HTTP_AUTH_ENABLED')) {
         cy.visit(pageUrl, {
             auth: {
