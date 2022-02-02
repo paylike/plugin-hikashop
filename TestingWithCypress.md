@@ -8,6 +8,7 @@ As you can see the plugin is bundled with Cypress testing on this repository. Yo
 
 * A hikashop installation is required, in which you need to have the sample theme installed and products displayed on the homepage.
 * You need to have Paylike module installed and configured (**test keys** required)
+* You need to have some other currencies configured in store, then set them in `cypress.env.json` file (these will be used to make payments with every currency specified)
 * You also need to have a test client account with previous purchases and an admin account for which you set the credentials in the `cypress.env.json` file
 * Lastly you need to have the some modules available on frontend
     - login form
@@ -37,8 +38,8 @@ As you can see the plugin is bundled with Cypress testing on this repository. Yo
     "ENV_ADMIN_PASS": "",
     "REMOTE_LOG_URL": "", // if you want to send log information about hikashop/paylike versions
     "ENV_CURRENCY_TO_CHANGE_WITH": "USD",
+    "ENV_CURRENCIES_TO_TEST": ["USD", "EUR"], // currencies used to make payments with in Full test
     "ENV_CAPTURE_MODE": "Delayed", // Instant/Delayed (write with capital first letter )
-    "ENV_CHECKOUT_MODE": "before_order",
     "ENV_STOP_EMAIL": false, // if true => deactivate sending email on order creation / status change
     "ENV_LOG_VERSION": false, // if true => send hikashop / paylike modules versions remotely
     "ENV_SETTINGS_CHECK": false, // if true => change paylike capture mode as is specified in ENV_CAPTURE_MODE variable
@@ -52,15 +53,7 @@ As you can see the plugin is bundled with Cypress testing on this repository. Yo
     ```bash
     npx cypress open
     ```
-
-4. Run
-    ```bash
-    ... # wait for cypress command
-    ```
-5. Run
-    ```bash
-    ... # wait for cypress command
-    ```
+4. In the interface, we can choose which test to run
 
 ## Getting Problems?
 
