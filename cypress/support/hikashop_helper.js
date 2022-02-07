@@ -38,8 +38,10 @@ export let PaylikeTestHelper = {
      * Login into admin
      */
     loginIntoAdmin() {
-        /** Select username & password inputs, then press enter. */
-        cy.get('input[name=username]').type(`${Cypress.env('ENV_ADMIN_USER')}`);
-        cy.get('input[name=passwd]').type(`${Cypress.env('ENV_ADMIN_PASS')}{enter}`);
+        if(!cy.getCookie(Cypress.env('ENV_COOKIE_HASH'))){
+            /** Select username & password inputs, then press enter. */
+            cy.get('input[name=username]').type(`${Cypress.env('ENV_ADMIN_USER')}`);
+            cy.get('input[name=passwd]').type(`${Cypress.env('ENV_ADMIN_PASS')}{enter}`);
+        }
     },
 };

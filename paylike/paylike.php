@@ -24,7 +24,7 @@ include_once('helpers/Paylike_Keys_Validator.php');
  */
 class plgHikashoppaymentPaylike extends hikashopPaymentPlugin
 {
-    const PAYLIKE_PLUGIN_VERSION = '1.2.0';
+    const PAYLIKE_PLUGIN_VERSION = '4.3.0';
 
     public $name = 'paylike';
     public $multiple = true;
