@@ -51,7 +51,7 @@ export var TestMethods = {
         PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
 
         /** Select search input and type "paylike", then press enter. */
-        cy.get('input[name="filter[search]"]').type(`${this.PaylikeName}{enter}`);
+        cy.get('input[name="filter[search]"]').clear().type(`${this.PaylikeName}{enter}`);
 
         /** Select row from plugins table to get plugin version from there. */
         cy.get('tbody tr').each(($element, index, $list) => {
@@ -119,7 +119,7 @@ export var TestMethods = {
 
         /** Select search input and type "paylike", then press enter. */
         cy.wait(1000);
-        cy.get('input[name=search]').type(`${this.PaylikeName}{enter}`);
+        cy.get('input[name=search]').clear().type(`${this.PaylikeName}{enter}`);
 
         /** Select link to Paylike settings. */
         cy.get('a[href*="' + `=edit&name=${this.PaylikeName}` + '"]').click();

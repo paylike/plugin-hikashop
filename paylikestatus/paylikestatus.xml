@@ -2,7 +2,7 @@
 <extension type="plugin" version="2.5" method="upgrade" group="hikashop">
 	<name>Hikashop Paylike Status Plugin</name>
 	<creationDate>30 August 2019</creationDate>
-	<version>1.0.0</version>
+	<version>4.3.0</version>
 	<author>Paylike</author>
 	<authorEmail>hello@paylike.io</authorEmail>
 	<authorUrl>https://paylike.io</authorUrl>
