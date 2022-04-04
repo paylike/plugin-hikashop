@@ -19,8 +19,12 @@ describe('paylike plugin quick test', () => {
      * Run this on every test case bellow
      * - preserve cookies between tests
      */
-    beforeEach(() => {
-        Cypress.Cookies.preserveOnce(Cypress.env('ENV_COOKIE_HASH'));
+     beforeEach(() => {
+        Cypress.Cookies.defaults({
+            preserve: (cookie) => {
+              return true;
+            }
+        });
     });
 
     /**

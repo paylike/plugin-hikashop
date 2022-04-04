@@ -35,9 +35,7 @@ export var TestMethods = {
      * Get Hikashop & Paylike versions and send log data.
      */
     logHikashopPaylikeVersions() {
-        /** Go to hikashop section from admin. */
-        cy.goToPage(this.HikashopAdminUrl);
-
+        /** Get hikashop version. */
         cy.get('.hikashop_footer').then(($hikashopFooter) => {
             var footerText = $hikashopFooter.text();
             var hikashopVersion = footerText.replace(/[^0-9.]/g, '');
