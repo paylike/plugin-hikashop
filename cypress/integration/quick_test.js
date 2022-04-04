@@ -37,15 +37,6 @@ describe('paylike plugin quick test', () => {
     }
 
     /**
-     * Get Hikashop & Paylike versions and send log data.
-     */
-    if (Cypress.env('ENV_LOG_VERSION') ?? false) {
-        it('log hikashop & paylike versions remotely', () => {
-            TestMethods.logHikashopPaylikeVersions();
-        });
-    }
-
-    /**
      * Modify Hikashop email settings (disable notifications)
      */
     if (Cypress.env('ENV_STOP_EMAIL') ?? false) {
