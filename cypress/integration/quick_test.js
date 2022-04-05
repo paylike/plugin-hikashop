@@ -10,9 +10,8 @@ describe('paylike plugin quick test', () => {
      * Go to backend site admin if necessary
      */
     before(() => {
-        if (TestMethods.NeedToAdminLogin) {
-            cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
-        }
+        cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
+        PaylikeTestHelper.loginIntoAdmin();
     });
 
     /**
@@ -27,32 +26,14 @@ describe('paylike plugin quick test', () => {
         });
     });
 
-    /**
-     * Login into admin if necessary.
-     */
-    if (TestMethods.NeedToAdminLogin) {
-        it('login into admin backend', () => {
-            PaylikeTestHelper.loginIntoAdmin();
-        });
-    }
-
-    /**
-     * Modify Hikashop email settings (disable notifications)
-     */
-    if (Cypress.env('ENV_STOP_EMAIL') ?? false) {
-        it('modify Hikashop settings for email notifications', () => {
-            TestMethods.deactivateHikashopEmailNotifications();
-        });
-    }
+    let captureMode = 'Delayed';
 
     /**
      * Modify Paylike settings
      */
-    if (Cypress.env('ENV_SETTINGS_CHECK') ?? false) {
-        it('modify Paylike settings for capture mode', () => {
-            TestMethods.changePaylikeCaptureMode();
-        });
-    }
+    it('modify Paylike settings for capture mode', () => {
+        TestMethods.changePaylikeCaptureMode(captureMode);
+    });
 
     /**
      * Make a payment

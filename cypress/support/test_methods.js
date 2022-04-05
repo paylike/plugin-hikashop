@@ -3,7 +3,6 @@
 'use strict';
 
 import { PaylikeTestHelper } from './hikashop_helper.js';
-import { PaylikeCurrencies } from './currencies.js';
 
 export var TestMethods = {
 
@@ -12,16 +11,7 @@ export var TestMethods = {
     AdminUrl: Cypress.env('ENV_ADMIN_URL'),
     StoreUsername: Cypress.env('ENV_CLIENT_USER'),
     StorePassword: Cypress.env('ENV_CLIENT_PASS'),
-
     RemoteVersionLogUrl: Cypress.env('REMOTE_LOG_URL'),
-    CaptureMode: Cypress.env('ENV_CAPTURE_MODE'),
-
-    /**
-     * Constants used to make or skip some tests.
-     */
-    NeedToAdminLogin: true === Cypress.env('ENV_STOP_EMAIL') ||
-                      true === Cypress.env('ENV_LOG_VERSION') ||
-                      true === Cypress.env('ENV_SETTINGS_CHECK'),
 
     /** Construct some variables to be used bellow. */
     PaylikeName: 'paylike',
@@ -84,31 +74,31 @@ export var TestMethods = {
      * Modify Hikashop email settings (disable notifications)
      */
     deactivateHikashopEmailNotifications() {
-        /** Go to hikashop email settings page. */
-        cy.goToPage(this.ManageEmailSettingUrl);
+        // /** Go to hikashop email settings page. */
+        // cy.goToPage(this.ManageEmailSettingUrl);
 
-        /** Set position relative for toolbar. */
-        PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+        // /** Set position relative for toolbar. */
+        // PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
 
-        /** Disable admin email notifications. */
-        cy.get('span[id*="config_value-order_"]').each(($element) => {
-            console.log($element.attr('id'))
-            if (
-                'config_value-order_notification.published' == $element.attr('id') ||
-                'config_value-order_admin_notification.published' == $element.attr('id')
-            ) {
-                var $spanLink = $element.children('a')
-                if ($spanLink.hasClass('icon-publish')) {
-                    $spanLink.trigger('click');
-                }
-            }
-        });
+        // /** Disable admin email notifications. */
+        // cy.get('span[id*="config_value-order_"]').each(($element) => {
+        //     console.log($element.attr('id'))
+        //     if (
+        //         'config_value-order_notification.published' == $element.attr('id') ||
+        //         'config_value-order_admin_notification.published' == $element.attr('id')
+        //     ) {
+        //         var $spanLink = $element.children('a')
+        //         if ($spanLink.hasClass('icon-publish')) {
+        //             $spanLink.trigger('click');
+        //         }
+        //     }
+        // });
     },
 
     /**
      * Modify Paylike settings
      */
-    changePaylikeCaptureMode() {
+    changePaylikeCaptureMode(captureMode) {
         /** Go to plugins page, and select Paylike. */
         cy.goToPage(this.ManagePaylikeSettingUrl);
 
@@ -126,7 +116,7 @@ export var TestMethods = {
         PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
 
         /** Change capture mode. */
-        cy.get('#datapaymentpayment_paramsinstant_mode').select(this.CaptureMode);
+        cy.get('#datapaymentpayment_paramsinstant_mode').select(captureMode);
         cy.get('#toolbar-save').click();
     },
 
@@ -167,24 +157,7 @@ export var TestMethods = {
          * Extract order amount
          */
         cy.get('.hikashop_checkout_cart_final_total').then(($frontendTotalAmount) => {
-            /** Get multiplier based on currency code. */
-            var multiplier = PaylikeCurrencies.get_paylike_currency_multiplier(currency);
-
-            /** Replace any character except numbers, commas, points */
-            var filtered = ($frontendTotalAmount.text()).replace(/[^0-9,.]/g, '')
-            var matchPointFirst = filtered.match(/\..*,/g);
-            var matchCommaFirst = filtered.match(/,.*\./g);
-
-            if (matchPointFirst) {
-                var amountAsText = (filtered.replace('.', '')).replace(',', '.');
-            } else if (matchCommaFirst) {
-                var amountAsText = filtered.replace(',', '');
-            } else {
-                var amountAsText = filtered.replace(',', '.');
-            }
-            var formattedAmount = parseFloat(amountAsText);
-            var expectedAmount = formattedAmount * multiplier;
-
+            var expectedAmount = PaylikeTestHelper.filterAndGetAmountInMinor($frontendTotalAmount, currency);
             /** Save expected amount as global. */
             cy.wrap(expectedAmount).as('expectedAmount');
         });
@@ -215,15 +188,9 @@ export var TestMethods = {
     /**
      * Process last order from admin panel
      */
-    processOrderFromAdmin(contextFlag = false) {
-
-        /** Login & go to admin orders page. */
-        if (false === this.NeedToAdminLogin && !contextFlag) {
-            cy.goToPage(this.OrdersPageAdminUrl);
-            PaylikeTestHelper.loginIntoAdmin();
-        } else {
-            cy.goToPage(this.OrdersPageAdminUrl);
-        }
+    processOrderFromAdmin() {
+        /** Go to admin orders page. */
+        cy.goToPage(this.OrdersPageAdminUrl);
 
         PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
 

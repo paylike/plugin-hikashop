@@ -11,6 +11,7 @@ describe('paylike plugin quick test', () => {
      */
     before(() => {
         cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
+        PaylikeTestHelper.loginIntoAdmin();
     });
 
     /**
@@ -23,13 +24,6 @@ describe('paylike plugin quick test', () => {
               return true;
             }
         });
-    });
-
-    /**
-     * Login into admin if necessary.
-     */
-    it('login into admin backend', () => {
-        PaylikeTestHelper.loginIntoAdmin();
     });
 
     let captureModes = ['Instant', 'Delayed'];
