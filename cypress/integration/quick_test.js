@@ -10,54 +10,30 @@ describe('paylike plugin quick test', () => {
      * Go to backend site admin if necessary
      */
     before(() => {
-        if (TestMethods.NeedToAdminLogin) {
-            cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
-        }
+        cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
+        PaylikeTestHelper.loginIntoAdmin();
     });
 
     /**
      * Run this on every test case bellow
      * - preserve cookies between tests
      */
-    beforeEach(() => {
-        Cypress.Cookies.preserveOnce(Cypress.env('ENV_COOKIE_HASH'));
+     beforeEach(() => {
+        Cypress.Cookies.defaults({
+            preserve: (cookie) => {
+              return true;
+            }
+        });
     });
 
-    /**
-     * Login into admin if necessary.
-     */
-    if (TestMethods.NeedToAdminLogin) {
-        it('login into admin backend', () => {
-            PaylikeTestHelper.loginIntoAdmin();
-        });
-    }
-
-    /**
-     * Get Hikashop & Paylike versions and send log data.
-     */
-    if (Cypress.env('ENV_LOG_VERSION') ?? false) {
-        it('log hikashop & paylike versions remotely', () => {
-            TestMethods.logHikashopPaylikeVersions();
-        });
-    }
-
-    /**
-     * Modify Hikashop email settings (disable notifications)
-     */
-    if (Cypress.env('ENV_STOP_EMAIL') ?? false) {
-        it('modify Hikashop settings for email notifications', () => {
-            TestMethods.deactivateHikashopEmailNotifications();
-        });
-    }
+    let captureMode = 'Delayed';
 
     /**
      * Modify Paylike settings
      */
-    if (Cypress.env('ENV_SETTINGS_CHECK') ?? false) {
-        it('modify Paylike settings for capture mode', () => {
-            TestMethods.changePaylikeCaptureMode();
-        });
-    }
+    it('modify Paylike settings for capture mode', () => {
+        TestMethods.changePaylikeCaptureMode(captureMode);
+    });
 
     /**
      * Make a payment

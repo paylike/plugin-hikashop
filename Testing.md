@@ -29,7 +29,6 @@ As you can see the plugin is bundled with Cypress testing on this repository. Yo
     "ENV_HTTP_AUTH_ENABLED": false, // if you have HTTP auth when accessing website
     "ENV_HTTP_USER": "", // if you have HTTP auth when accessing website
     "ENV_HTTP_PASS": "",
-    "ENV_COOKIE_HASH": "", // name of the cookie (in Joomla it is a hash - it changes after each Joomla/Hikashop setup)
     "ENV_STORE_URL": "", // http(s)://baseUrl
     "ENV_ADMIN_URL": "", // like http(s)://baseUrl/administrator
     "ENV_CLIENT_USER": "", // frontend user
@@ -41,7 +40,6 @@ As you can see the plugin is bundled with Cypress testing on this repository. Yo
     "ENV_CURRENCIES_TO_TEST": ["USD", "EUR"], // currencies used to make payments with in Full test
     "ENV_CAPTURE_MODE": "Delayed", // Instant/Delayed (write with capital first letter )
     "ENV_STOP_EMAIL": false, // if true => deactivate sending email on order creation / status change
-    "ENV_LOG_VERSION": false, // if true => send hikashop / paylike modules versions remotely
     "ENV_SETTINGS_CHECK": false, // if true => change paylike capture mode as is specified in ENV_CAPTURE_MODE variable
     "ENV_CARD_NUMBER": 4100000000000000,
     "ENV_CARD_EXPIRY": 1226,
