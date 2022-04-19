@@ -223,15 +223,5 @@ export var TestMethods = {
         it('process (capture/refund/void) an order from admin panel', () => {
             this.processOrderFromAdmin(contextFlag);
         });
-
-        /** Send log if currency = DKK. */
-        /**
-         * HARDCODED currency
-         */
-        if ('DKK' == currency) {
-            it('log hikashop & paylike versions remotely', () => {
-                this.logHikashopPaylikeVersions();
-            });
-        }
     }
 }
