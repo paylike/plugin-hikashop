@@ -22,6 +22,21 @@ export var TestMethods = {
     OrdersPageAdminUrl: '/index.php?option=com_hikashop&ctrl=order&order_type=sale',
 
     /**
+     * Login to admin backend account
+     */
+     loginIntoAdminBackend() {
+        cy.goToPage(this.AdminUrl);
+        cy.loginIntoAccount('input[name=username]', 'input[name=passwd]', 'admin');
+    },
+    /**
+     * Login to client|user frontend account
+     */
+    loginIntoClientAccount() {
+        cy.goToPage(this.StoreUrl);
+        cy.loginIntoAccount('input[name=username]', 'input[name=password]', 'client');
+    },
+
+    /**
      * Get Hikashop & Paylike versions and send log data.
      */
     logHikashopPaylikeVersions() {

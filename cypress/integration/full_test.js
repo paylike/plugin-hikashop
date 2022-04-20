@@ -3,15 +3,14 @@
 'use strict';
 
 import { TestMethods } from '../support/test_methods.js';
-import { PaylikeTestHelper } from '../support/hikashop_helper.js';
 
 describe('paylike plugin quick test', () => {
     /**
      * Go to backend site admin if necessary
      */
     before(() => {
-        cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
-        PaylikeTestHelper.loginIntoAdmin();
+        TestMethods.loginIntoClientAccount();
+        TestMethods.loginIntoAdminBackend();
     });
 
     /**
