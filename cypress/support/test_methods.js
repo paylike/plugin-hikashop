@@ -7,10 +7,8 @@ import { PaylikeTestHelper } from './hikashop_helper.js';
 export var TestMethods = {
 
     /** Admin & frontend user credentials. */
-    StoreUrl: Cypress.env('ENV_STORE_URL'),
+    StoreUrl: (Cypress.env('ENV_ADMIN_URL').match(/^(?:http(?:s?):\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/im))[0],
     AdminUrl: Cypress.env('ENV_ADMIN_URL'),
-    StoreUsername: Cypress.env('ENV_CLIENT_USER'),
-    StorePassword: Cypress.env('ENV_CLIENT_PASS'),
     RemoteVersionLogUrl: Cypress.env('REMOTE_LOG_URL'),
 
     /** Construct some variables to be used bellow. */
