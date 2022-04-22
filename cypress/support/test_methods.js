@@ -7,10 +7,8 @@ import { PaylikeTestHelper } from './hikashop_helper.js';
 export var TestMethods = {
 
     /** Admin & frontend user credentials. */
-    StoreUrl: Cypress.env('ENV_STORE_URL'),
+    StoreUrl: (Cypress.env('ENV_ADMIN_URL').match(/^(?:http(?:s?):\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/im))[0],
     AdminUrl: Cypress.env('ENV_ADMIN_URL'),
-    StoreUsername: Cypress.env('ENV_CLIENT_USER'),
-    StorePassword: Cypress.env('ENV_CLIENT_PASS'),
     RemoteVersionLogUrl: Cypress.env('REMOTE_LOG_URL'),
 
     /** Construct some variables to be used bellow. */
@@ -20,6 +18,21 @@ export var TestMethods = {
     ManageEmailSettingUrl: '/index.php?option=com_hikashop&ctrl=email',
     ManagePaylikeSettingUrl: '/index.php?option=com_hikashop&ctrl=plugins&plugin_type=payment',
     OrdersPageAdminUrl: '/index.php?option=com_hikashop&ctrl=order&order_type=sale',
+
+    /**
+     * Login to admin backend account
+     */
+     loginIntoAdminBackend() {
+        cy.goToPage(this.AdminUrl);
+        cy.loginIntoAccount('input[name=username]', 'input[name=passwd]', 'admin');
+    },
+    /**
+     * Login to client|user frontend account
+     */
+    loginIntoClientAccount() {
+        cy.goToPage(this.StoreUrl);
+        cy.loginIntoAccount('input[name=username]', 'input[name=password]', 'client');
+    },
 
     /**
      * Get Hikashop & Paylike versions and send log data.
@@ -223,15 +236,5 @@ export var TestMethods = {
         it('process (capture/refund/void) an order from admin panel', () => {
             this.processOrderFromAdmin(contextFlag);
         });
-
-        /** Send log if currency = DKK. */
-        /**
-         * HARDCODED currency
-         */
-        if ('DKK' == currency) {
-            it('log hikashop & paylike versions remotely', () => {
-                this.logHikashopPaylikeVersions();
-            });
-        }
     }
 }

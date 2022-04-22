@@ -3,15 +3,14 @@
 'use strict';
 
 import { TestMethods } from '../support/test_methods.js';
-import { PaylikeTestHelper } from '../support/hikashop_helper.js';
 
 describe('paylike plugin quick test', () => {
     /**
      * Go to backend site admin if necessary
      */
     before(() => {
-        cy.goToPage(Cypress.env('ENV_ADMIN_URL'));
-        PaylikeTestHelper.loginIntoAdmin();
+        TestMethods.loginIntoClientAccount();
+        TestMethods.loginIntoAdminBackend();
     });
 
     /**
@@ -33,8 +32,7 @@ describe('paylike plugin quick test', () => {
     context(`make payments in "${captureModes[0]}" mode`, () => {
         /** Modify Paylike settings. */
         it(`change Paylike capture mode to "${captureModes[0]}"`, () => {
-            TestMethods.CaptureMode = captureModes[0];
-            TestMethods.changePaylikeCaptureMode();
+            TestMethods.changePaylikeCaptureMode(captureModes[0]);
         });
 
         /** Make Instant payments */
@@ -46,8 +44,7 @@ describe('paylike plugin quick test', () => {
     context(`make payments in "${captureModes[1]}" mode`, () => {
         /** Modify Paylike settings. */
         it(`change Paylike capture mode to "${captureModes[1]}"`, () => {
-            TestMethods.CaptureMode = captureModes[1];
-            TestMethods.changePaylikeCaptureMode();
+            TestMethods.changePaylikeCaptureMode(captureModes[1]);
         });
 
         for (var currency of currenciesToTest) {

@@ -39,3 +39,26 @@
         cy.visit(pageUrl);
     }
 });
+
+/**
+ * Login into an account
+ * {String} usernameInputSelector
+ * {String} passwordInputSelector
+ * {String} type
+ */
+ Cypress.Commands.add('loginIntoAccount', (usernameInputSelector, passwordInputSelector, type) => {
+    /** Select username & password inputs, then press enter. */
+    if ('client' === type || 'user' === type) {
+        var username = Cypress.env('ENV_CLIENT_USER');
+        var password = Cypress.env('ENV_CLIENT_PASS');
+    } else if ('admin' === type) {
+        var username = Cypress.env('ENV_ADMIN_USER');
+        var password = Cypress.env('ENV_ADMIN_PASS');
+    }
+
+    cy.get(usernameInputSelector).type(username);
+    cy.get(passwordInputSelector).type(`${password}{enter}`);
+
+    /** Wait the page to load properly after login, before any redirect. */
+    cy.wait(1000);
+});
