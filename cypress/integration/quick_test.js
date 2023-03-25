@@ -35,17 +35,22 @@ describe('paylike plugin quick test', () => {
     });
 
     /**
-     * Make a payment
+     * Make payment & CAPTURE from admin
      */
-    it('makes a payment with Paylike', () => {
-        TestMethods.makePaymentFromFrontend(Cypress.env('ENV_CURRENCY_TO_CHANGE_WITH'));
-    });
+    TestMethods.payWithSelectedCurrency(Cypress.env('ENV_CURRENCY_TO_CHANGE_WITH'), 'capture');
 
     /**
-     * Process last order from admin panel
-     */
-    it('process (capture/refund/void) an order from admin panel', () => {
-        TestMethods.processOrderFromAdmin();
+    * Make payment & VOID from admin
+    */
+    TestMethods.payWithSelectedCurrency(Cypress.env('ENV_CURRENCY_TO_CHANGE_WITH'), 'void');
+
+    /**
+    * Make payment & CAPTURE from admin
+    */
+    TestMethods.payWithSelectedCurrency(Cypress.env('ENV_CURRENCY_TO_CHANGE_WITH'), 'capture');
+    it('process REFUND last order from admin panel', () => {
+        TestMethods.processOrderFromAdmin('refund');
     });
+
 
 }); // describe

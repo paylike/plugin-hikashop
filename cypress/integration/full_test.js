@@ -37,7 +37,7 @@ describe('paylike plugin quick test', () => {
 
         /** Make Instant payments */
         for (var currency of currenciesToTest) {
-            TestMethods.payWithSelectedCurrency(currency, contextFlag);
+            TestMethods.payWithSelectedCurrency(currency, 'refund');
         }
     });
 
@@ -52,7 +52,8 @@ describe('paylike plugin quick test', () => {
              * HARDCODED currency
              */
             if ('USD' == currency || 'RON' == currency) {
-                TestMethods.payWithSelectedCurrency(currency, contextFlag);
+                TestMethods.payWithSelectedCurrency(currency, 'capture');
+                TestMethods.payWithSelectedCurrency(currency, 'void');
             }
         }
     });

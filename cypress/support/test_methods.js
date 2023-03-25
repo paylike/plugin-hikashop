@@ -18,6 +18,7 @@ export var TestMethods = {
     ManageEmailSettingUrl: '/index.php?option=com_hikashop&ctrl=email',
     ManagePaylikeSettingUrl: '/index.php?option=com_hikashop&ctrl=plugins&plugin_type=payment',
     OrdersPageAdminUrl: '/index.php?option=com_hikashop&ctrl=order&order_type=sale',
+    CaptureMode: '',
 
     /**
      * Login to admin backend account
@@ -131,6 +132,8 @@ export var TestMethods = {
         /** Change capture mode. */
         cy.get('#datapaymentpayment_paramsinstant_mode').select(captureMode);
         cy.get('#toolbar-save').click();
+
+        this.CaptureMode = captureMode;
     },
 
     /**
@@ -139,10 +142,6 @@ export var TestMethods = {
     makePaymentFromFrontend(currency) {
         /** Go to store frontend. */
         cy.goToPage(this.StoreUrl);
-
-        /** Client frontend login. */
-        cy.get('input[name=username]').type(`${this.StoreUsername}`);
-        cy.get('input[name=password]').type(`${this.StorePassword}{enter}`);
 
         /** Change currency & wait for products price to finish update. */
         cy.get('#hikashopcurrency option').each(($option) => {
@@ -153,8 +152,10 @@ export var TestMethods = {
         cy.wait(2000);
 
         /** Add to cart random product. */
-        var randomInt = PaylikeTestHelper.getRandomInt(/*max*/ 6);
-        cy.get('.hikabtn.hikacart').eq(randomInt).click();
+        cy.get('button.hikabtn.hikacart').its('length').then(length => {
+            var randomInt = PaylikeTestHelper.getRandomInt(/*max*/ length);
+            cy.get('button.hikabtn.hikacart').eq(randomInt).click();
+        })
 
         /** Wait for 'added to cart' notification to disappear */
         cy.wait(3000);
@@ -195,13 +196,13 @@ export var TestMethods = {
         });
 
         /** Check if order was paid. */
-        cy.get('.hikashop_paylike_end #paylike_paid').should('be.visible');
+        cy.get('#paylike_paid', {timeout: 20000}).should('be.visible');
     },
 
     /**
      * Process last order from admin panel
      */
-    processOrderFromAdmin() {
+    processOrderFromAdmin(action = '') {
         /** Go to admin orders page. */
         cy.goToPage(this.OrdersPageAdminUrl);
 
@@ -210,22 +211,25 @@ export var TestMethods = {
         /** Click on first order from table (last created). */
         cy.get('.hikashop_order_number_value a').first().click();
 
-        /**
-         * If CaptureMode='Delayed' => make 'capture' (set shipped on order status)
-         * If CaptureMode='Instant' => make 'refund' (set refunded on order status)
-         */
-        if ('Delayed' === this.CaptureMode) {
-            PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
-            PaylikeTestHelper.changeOrderStatus('shipped');
-        } else {
-            PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
-            PaylikeTestHelper.changeOrderStatus('refunded');
+        switch (action) {
+            case 'capture':
+                PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+                PaylikeTestHelper.changeOrderStatus('shipped');
+                break;
+            case 'refund':
+                PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+                PaylikeTestHelper.changeOrderStatus('refunded');
+                break;
+            case 'void':
+                PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+                PaylikeTestHelper.changeOrderStatus('refunded');
+                break;
         }
     },
     /**
      * Make payment with specified currency and process order
      */
-    payWithSelectedCurrency(currency, contextFlag = false) {
+    payWithSelectedCurrency(currency, action = '') {
 
         /** Make an instant payment. */
         it(`makes a Paylike payment with "${currency}"`, () => {
@@ -233,8 +237,8 @@ export var TestMethods = {
         });
 
         /** Process last order from admin panel. */
-        it('process (capture/refund/void) an order from admin panel', () => {
-            this.processOrderFromAdmin(contextFlag);
+        it(`process ${action.toUpperCase()} last order from admin panel`, () => {
+            this.processOrderFromAdmin(action);
         });
     }
 }
