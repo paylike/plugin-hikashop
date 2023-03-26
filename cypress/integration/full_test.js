@@ -4,7 +4,7 @@
 
 import { TestMethods } from '../support/test_methods.js';
 
-describe('paylike plugin quick test', () => {
+describe('plugin full test', () => {
     /**
      * Go to backend site admin if necessary
      */
@@ -30,9 +30,9 @@ describe('paylike plugin quick test', () => {
     let contextFlag = true;
 
     context(`make payments in "${captureModes[0]}" mode`, () => {
-        /** Modify Paylike settings. */
-        it(`change Paylike capture mode to "${captureModes[0]}"`, () => {
-            TestMethods.changePaylikeCaptureMode(captureModes[0]);
+        /** Modify plugin settings. */
+        it(`change capture mode to "${captureModes[0]}"`, () => {
+            TestMethods.changeCaptureMode(captureModes[0]);
         });
 
         /** Make Instant payments */
@@ -42,9 +42,9 @@ describe('paylike plugin quick test', () => {
     });
 
     context(`make payments in "${captureModes[1]}" mode`, () => {
-        /** Modify Paylike settings. */
-        it(`change Paylike capture mode to "${captureModes[1]}"`, () => {
-            TestMethods.changePaylikeCaptureMode(captureModes[1]);
+        /** Modify plugin settings. */
+        it(`change capture mode to "${captureModes[1]}"`, () => {
+            TestMethods.changeCaptureMode(captureModes[1]);
         });
 
         for (var currency of currenciesToTest) {
