@@ -1,6 +1,6 @@
-import { PaylikeCurrencies } from './currencies.js';
+import { PluginCurrencies } from './currencies.js';
 
-export let PaylikeTestHelper = {
+export let PluginTestHelper = {
     /**
      * Set position=relative on selected element
      * Useful when an element cover another element
@@ -25,7 +25,7 @@ export let PaylikeTestHelper = {
         var formattedAmount = this.filterAndGetAmountInMajorUnit($unfilteredAmount);
 
         /** Get multiplier based on currency code. */
-        var multiplier = PaylikeCurrencies.get_paylike_currency_multiplier(currency);
+        var multiplier = PluginCurrencies.get_currency_multiplier(currency);
 
         return Math.ceil(Math.round(formattedAmount * multiplier));
     },
@@ -64,9 +64,9 @@ export let PaylikeTestHelper = {
         return Math.floor(Math.random() * max);
     },
     /**
-     * Fill Paylike popup and submit the form
+     * Fill payment popup and submit the form
      */
-    fillAndSubmitPaylikePopup() {
+    fillAndSubmitPopup() {
         cy.get('#card-number').type(`${Cypress.env('ENV_CARD_NUMBER')}`);
         cy.get('#card-expiry').type(`${Cypress.env('ENV_CARD_EXPIRY')}`);
         cy.get('#card-code').type(`${Cypress.env('ENV_CARD_CVV')}{enter}`);

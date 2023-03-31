@@ -1,4 +1,4 @@
-export var PaylikeCurrencies = {
+export var PluginCurrencies = {
     /**
      * Return the number that should be used to compute cents from the total amount
      *
@@ -6,8 +6,8 @@ export var PaylikeCurrencies = {
      *
      * @return {Number}
      */
-    get_paylike_currency_multiplier(currency_iso_code) {
-        var currency = this.get_paylike_currency(currency_iso_code);
+    get_currency_multiplier(currency_iso_code) {
+        var currency = this.get_currency(currency_iso_code);
         if (currency.hasOwnProperty('exponent')) {
             return Math.pow(10, currency['exponent']);
         } else {
@@ -19,7 +19,7 @@ export var PaylikeCurrencies = {
      * @param {String} currency_iso_code
      * @returns
      */
-    get_paylike_currency(currency_iso_code) {
+    get_currency(currency_iso_code) {
         var currencies = {
             "AED": {
                     "code": "AED",

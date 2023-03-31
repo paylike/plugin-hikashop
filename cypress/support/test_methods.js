@@ -2,7 +2,7 @@
 
 'use strict';
 
-import { PaylikeTestHelper } from './hikashop_helper.js';
+import { PluginTestHelper } from './hikashop_helper.js';
 
 export var TestMethods = {
 
@@ -12,12 +12,13 @@ export var TestMethods = {
     RemoteVersionLogUrl: Cypress.env('REMOTE_LOG_URL'),
 
     /** Construct some variables to be used bellow. */
-    PaylikeName: 'paylike',
+    VendorName: 'paylike',
     HikashopAdminUrl: '/index.php?option=com_hikashop',
     ManageExtensionsAdminUrl: '/index.php?option=com_installer&view=manage',
     ManageEmailSettingUrl: '/index.php?option=com_hikashop&ctrl=email',
-    ManagePaylikeSettingUrl: '/index.php?option=com_hikashop&ctrl=plugins&plugin_type=payment',
+    ManagePluginSettingUrl: '/index.php?option=com_hikashop&ctrl=plugins&plugin_type=payment',
     OrdersPageAdminUrl: '/index.php?option=com_hikashop&ctrl=order&order_type=sale',
+    CaptureMode: '',
 
     /**
      * Login to admin backend account
@@ -35,9 +36,9 @@ export var TestMethods = {
     },
 
     /**
-     * Get Hikashop & Paylike versions and send log data.
+     * Get framework & plugin versions and send log data.
      */
-    logHikashopPaylikeVersions() {
+    logVersion() {
         /** Get hikashop version. */
         cy.get('.hikashop_footer').then(($hikashopFooter) => {
             var footerText = $hikashopFooter.text();
@@ -49,33 +50,33 @@ export var TestMethods = {
         cy.goToPage(this.ManageExtensionsAdminUrl);
 
         /** Set position relative for toolbar. */
-        PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+        PluginTestHelper.setPositionRelativeOn('#subhead-container');
 
-        /** Select search input and type "paylike", then press enter. */
-        cy.get('input[name="filter[search]"]').clear().type(`${this.PaylikeName}{enter}`);
+        /** Select search input and type vendor name, then press enter. */
+        cy.get('input[name="filter[search]"]').clear().type(`${this.VendorName}{enter}`);
 
         /** Select row from plugins table to get plugin version from there. */
         cy.get('tbody tr').each(($element, index, $list) => {
             var rowText = $element.text();
             if (rowText.includes('hikashoppayment')) {
                 cy.get('tr td:nth-child(6)').eq(index).then($pluginVersion => {
-                    var paylikePaymentVersion = $pluginVersion.text();
+                    var pluginVersion = $pluginVersion.text();
                     /** Make global variable to be accessible bellow. */
-                    cy.wrap(paylikePaymentVersion).as('paylikePaymentVersion');
+                    cy.wrap(pluginVersion).as('pluginVersion');
                 });
             }
         });
 
         /** Get global variables and make log data request to remote url. */
         cy.get('@hikashopVersion').then(hikashopFooterVersion => {
-            cy.get('@paylikePaymentVersion').then(paylikeModuleVersion => {
+            cy.get('@pluginVersion').then(pluginVersion => {
 
                 cy.request('GET', this.RemoteVersionLogUrl, {
                     key: hikashopFooterVersion,
                     tag: 'hikashop',
                     view: 'html',
                     ecommerce: hikashopFooterVersion,
-                    plugin: paylikeModuleVersion
+                    plugin: pluginVersion
                 }).then((resp) => {
                     expect(resp.status).to.eq(200);
                 });
@@ -91,7 +92,7 @@ export var TestMethods = {
         // cy.goToPage(this.ManageEmailSettingUrl);
 
         // /** Set position relative for toolbar. */
-        // PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+        // PluginTestHelper.setPositionRelativeOn('#subhead-container');
 
         // /** Disable admin email notifications. */
         // cy.get('span[id*="config_value-order_"]').each(($element) => {
@@ -109,28 +110,30 @@ export var TestMethods = {
     },
 
     /**
-     * Modify Paylike settings
+     * Modify Plugin settings
      */
-    changePaylikeCaptureMode(captureMode) {
-        /** Go to plugins page, and select Paylike. */
-        cy.goToPage(this.ManagePaylikeSettingUrl);
+    changeCaptureMode(captureMode) {
+        /** Go to plugins page, and select payment method. */
+        cy.goToPage(this.ManagePluginSettingUrl);
 
         /** Set position relative for toolbar. */
-        PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+        PluginTestHelper.setPositionRelativeOn('#subhead-container');
 
-        /** Select search input and type "paylike", then press enter. */
+        /** Select search input and type vendor name, then press enter. */
         cy.wait(1000);
-        cy.get('input[name=search]').clear().type(`${this.PaylikeName}{enter}`);
+        cy.get('input[name=search]').clear().type(`${this.VendorName}{enter}`);
 
-        /** Select link to Paylike settings. */
-        cy.get('a[href*="' + `=edit&name=${this.PaylikeName}` + '"]').click();
+        /** Select link to plugin settings. */
+        cy.get('a[href*="' + `=edit&name=${this.VendorName}` + '"]').click();
 
         /** Set position relative for toolbar. */
-        PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+        PluginTestHelper.setPositionRelativeOn('#subhead-container');
 
         /** Change capture mode. */
         cy.get('#datapaymentpayment_paramsinstant_mode').select(captureMode);
         cy.get('#toolbar-save').click();
+
+        this.CaptureMode = captureMode;
     },
 
     /**
@@ -139,10 +142,6 @@ export var TestMethods = {
     makePaymentFromFrontend(currency) {
         /** Go to store frontend. */
         cy.goToPage(this.StoreUrl);
-
-        /** Client frontend login. */
-        cy.get('input[name=username]').type(`${this.StoreUsername}`);
-        cy.get('input[name=password]').type(`${this.StorePassword}{enter}`);
 
         /** Change currency & wait for products price to finish update. */
         cy.get('#hikashopcurrency option').each(($option) => {
@@ -153,8 +152,10 @@ export var TestMethods = {
         cy.wait(2000);
 
         /** Add to cart random product. */
-        var randomInt = PaylikeTestHelper.getRandomInt(/*max*/ 6);
-        cy.get('.hikabtn.hikacart').eq(randomInt).click();
+        cy.get('button.hikabtn.hikacart').its('length').then(length => {
+            var randomInt = PluginTestHelper.getRandomInt(/*max*/ length);
+            cy.get('button.hikabtn.hikacart').eq(randomInt).click();
+        })
 
         /** Wait for 'added to cart' notification to disappear */
         cy.wait(3000);
@@ -163,14 +164,14 @@ export var TestMethods = {
         /** Proceed to checkout. */
         cy.get('.hikashop_cart_proceed_to_checkout').click();
 
-        /** Choose Paylike. */
-        cy.get(`input[id*=${this.PaylikeName}]`).click();
+        /** Choose payment method. */
+        cy.get(`input[id*=${this.VendorName}]`).click();
 
         /**
          * Extract order amount
          */
         cy.get('.hikashop_checkout_cart_final_total').then(($frontendTotalAmount) => {
-            var expectedAmount = PaylikeTestHelper.filterAndGetAmountInMinor($frontendTotalAmount, currency);
+            var expectedAmount = PluginTestHelper.filterAndGetAmountInMinor($frontendTotalAmount, currency);
             /** Save expected amount as global. */
             cy.wrap(expectedAmount).as('expectedAmount');
         });
@@ -182,12 +183,12 @@ export var TestMethods = {
         cy.get('#paylike_paying').should('be.visible');
 
         /**
-         * Fill in Paylike popup.
+         * Fill in payment popup.
          */
-        PaylikeTestHelper.fillAndSubmitPaylikePopup();
+        PluginTestHelper.fillAndSubmitPopup();
 
         /** Verify amount. */
-        /** We verify here, because "window.paylikeAmount" is available after paylike popup show */
+        /** We verify here, because "window.paylikeAmount" is available after popup show */
         cy.get('@expectedAmount').then(expectedAmount => {
             cy.window().then((win) => {
                 expect(expectedAmount).to.eq(Number(win.paylikeAmount))
@@ -195,46 +196,49 @@ export var TestMethods = {
         });
 
         /** Check if order was paid. */
-        cy.get('.hikashop_paylike_end #paylike_paid').should('be.visible');
+        cy.get('#paylike_paid', {timeout: 20000}).should('be.visible');
     },
 
     /**
      * Process last order from admin panel
      */
-    processOrderFromAdmin() {
+    processOrderFromAdmin(action = '') {
         /** Go to admin orders page. */
         cy.goToPage(this.OrdersPageAdminUrl);
 
-        PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
+        PluginTestHelper.setPositionRelativeOn('#subhead-container');
 
         /** Click on first order from table (last created). */
         cy.get('.hikashop_order_number_value a').first().click();
 
-        /**
-         * If CaptureMode='Delayed' => make 'capture' (set shipped on order status)
-         * If CaptureMode='Instant' => make 'refund' (set refunded on order status)
-         */
-        if ('Delayed' === this.CaptureMode) {
-            PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
-            PaylikeTestHelper.changeOrderStatus('shipped');
-        } else {
-            PaylikeTestHelper.setPositionRelativeOn('#subhead-container');
-            PaylikeTestHelper.changeOrderStatus('refunded');
+        switch (action) {
+            case 'capture':
+                PluginTestHelper.setPositionRelativeOn('#subhead-container');
+                PluginTestHelper.changeOrderStatus('shipped');
+                break;
+            case 'refund':
+                PluginTestHelper.setPositionRelativeOn('#subhead-container');
+                PluginTestHelper.changeOrderStatus('refunded');
+                break;
+            case 'void':
+                PluginTestHelper.setPositionRelativeOn('#subhead-container');
+                PluginTestHelper.changeOrderStatus('refunded');
+                break;
         }
     },
     /**
      * Make payment with specified currency and process order
      */
-    payWithSelectedCurrency(currency, contextFlag = false) {
+    payWithSelectedCurrency(currency, action = '') {
 
         /** Make an instant payment. */
-        it(`makes a Paylike payment with "${currency}"`, () => {
+        it(`makes a payment with "${currency}"`, () => {
             this.makePaymentFromFrontend(currency);
         });
 
         /** Process last order from admin panel. */
-        it('process (capture/refund/void) an order from admin panel', () => {
-            this.processOrderFromAdmin(contextFlag);
+        it(`process ${action.toUpperCase()} last order from admin panel`, () => {
+            this.processOrderFromAdmin(action);
         });
     }
 }
